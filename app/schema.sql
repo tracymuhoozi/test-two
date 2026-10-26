@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reg_no VARCHAR(30) NOT NULL UNIQUE,
+    full_name VARCHAR(120) NOT NULL,
+    programme VARCHAR(120) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS courses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(20) NOT NULL UNIQUE,
+    title VARCHAR(150) NOT NULL,
+    credit_units TINYINT UNSIGNED NOT NULL
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT NOT NULL,
+    course_id INT NOT NULL,
+    coursework DECIMAL(5,2) NOT NULL,
+    exam DECIMAL(5,2) NOT NULL,
+    total DECIMAL(5,2) NOT NULL,
+    grade VARCHAR(2) NOT NULL,
+    grade_point DECIMAL(3,2) NOT NULL,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_student_course (student_id, course_id),
+    CONSTRAINT fk_results_student FOREIGN KEY (student_id) REFERENCES students (id) ON DELETE CASCADE,
+    CONSTRAINT fk_results_course FOREIGN KEY (course_id) REFERENCES courses (id) ON DELETE CASCADE
+) ENGINE=InnoDB;

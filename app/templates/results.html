@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Results · Results Management System{% endblock %}
+{% block content %}
+<h1>Results</h1>
+
+<section class="card">
+  <h2>Record a result</h2>
+  {% if students and courses %}
+  <form method="post" class="grid">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Student
+      <select name="student_id" required>
+        <option value="" disabled selected>Choose…</option>
+        {% for s in students %}
+        <option value="{{ s.id }}">{{ s.reg_no }} — {{ s.full_name }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Course
+      <select name="course_id" required>
+        <option value="" disabled selected>Choose…</option>
+        {% for c in courses %}
+        <option value="{{ c.id }}">{{ c.code }} — {{ c.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Coursework (max {{ max_coursework }})
+      <input name="coursework" type="number" step="0.01" min="0" max="{{ max_coursework }}" required>
+    </label>
+    <label>Exam (max {{ max_exam }})
+      <input name="exam" type="number" step="0.01" min="0" max="{{ max_exam }}" required>
+    </label>
+    <button type="submit">Save result</button>
+  </form>
+  <p class="muted small">Saving again for the same student and course replaces the earlier marks.</p>
+  {% else %}
+  <p class="muted">Add at least one <a href="{{ url_for('students') }}">student</a> and one
+    <a href="{{ url_for('courses') }}">course</a> first.</p>
+  {% endif %}
+</section>
+
+<section class="card">
+  <form method="get" class="filter">
+    <label>Filter by course
+      <select name="course" onchange="this.form.submit()">
+        <option value="">All courses</option>
+        {% for c in courses %}
+        <option value="{{ c.id }}" {{ 'selected' if course_filter == c.id }}>{{ c.code }} — {{ c.title }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <noscript><button type="submit">Apply</button></noscript>
+  </form>
+
+  {% if rows %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Reg. no.</th><th>Student</th><th>Course</th>
+          <th class="num">Coursework</th><th class="num">Exam</th>
+          <th class="num">Total</th><th>Grade</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.reg_no }}</td>
+          <td>{{ r.full_name }}</td>
+          <td>{{ r.code }}</td>
+          <td class="num">{{ r.coursework }}</td>
+          <td class="num">{{ r.exam }}</td>
+          <td class="num">{{ r.total }}</td>
+          <td><strong>{{ r.grade }}</strong></td>
+          <td class="actions">
+            <form method="post" action="{{ url_for('delete_result', result_id=r.id) }}"
+                  onsubmit="return confirm('Delete this result?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="linklike danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No results to show.</p>
+  {% endif %}
+</section>
+{% endblock %}

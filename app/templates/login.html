@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Sign in · Results Management System{% endblock %}
+{% block content %}
+<section class="card narrow">
+  <h1>Results Management System</h1>
+  <p class="muted">Sign in to manage students, courses and results.</p>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Username
+      <input name="username" autocomplete="username" required autofocus>
+    </label>
+    <label>Password
+      <input name="password" type="password" autocomplete="current-password" required>
+    </label>
+    <button type="submit">Sign in</button>
+  </form>
+</section>
+{% endblock %}

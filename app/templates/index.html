@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+<div class="stats">
+  <a class="stat" href="{{ url_for('students') }}">
+    <span class="num">{{ counts.students }}</span><span>Students</span>
+  </a>
+  <a class="stat" href="{{ url_for('courses') }}">
+    <span class="num">{{ counts.courses }}</span><span>Courses</span>
+  </a>
+  <a class="stat" href="{{ url_for('results') }}">
+    <span class="num">{{ counts.results }}</span><span>Results recorded</span>
+  </a>
+</div>
+<p class="muted">Start by adding students and courses, then record results against them.</p>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{ student.full_name }} · Results Management System{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('students') }}">&larr; All students</a></p>
+<h1>{{ student.full_name }}</h1>
+<p class="muted">{{ student.reg_no }} &middot; {{ student.programme }}</p>
+
+<section class="card">
+  <h2>Transcript</h2>
+  {% if rows %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th><th>Course</th><th class="num">Credits</th>
+          <th class="num">Coursework</th><th class="num">Exam</th>
+          <th class="num">Total</th><th>Grade</th><th class="num">Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.code }}</td>
+          <td>{{ r.title }}</td>
+          <td class="num">{{ r.credit_units }}</td>
+          <td class="num">{{ r.coursework }}</td>
+          <td class="num">{{ r.exam }}</td>
+          <td class="num">{{ r.total }}</td>
+          <td><strong>{{ r.grade }}</strong></td>
+          <td class="num">{{ r.grade_point }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="summary">
+    Credit units: <strong>{{ total_units }}</strong> &nbsp;&middot;&nbsp;
+    GPA: <strong>{{ "%.2f"|format(gpa) }}</strong>
+  </p>
+  {% else %}
+  <p class="muted">No results recorded for this student yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

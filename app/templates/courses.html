@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Courses · Results Management System{% endblock %}
+{% block content %}
+<h1>Courses</h1>
+
+<section class="card">
+  <h2>Add a course</h2>
+  <form method="post" class="grid">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Course code
+      <input name="code" maxlength="20" required placeholder="BIT2101">
+    </label>
+    <label>Title
+      <input name="title" maxlength="150" required>
+    </label>
+    <label>Credit units
+      <input name="credit_units" type="number" min="1" max="20" value="3" required>
+    </label>
+    <button type="submit">Add course</button>
+  </form>
+</section>
+
+<section class="card">
+  {% if courses %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Code</th><th>Title</th><th class="num">Credits</th><th></th></tr></thead>
+      <tbody>
+        {% for c in courses %}
+        <tr>
+          <td>{{ c.code }}</td>
+          <td>{{ c.title }}</td>
+          <td class="num">{{ c.credit_units }}</td>
+          <td class="actions">
+            <a href="{{ url_for('results', course=c.id) }}">Results</a>
+            <form method="post" action="{{ url_for('delete_course', course_id=c.id) }}"
+                  onsubmit="return confirm('Delete this course and all results recorded for it?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <button class="linklike danger" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No courses yet.</p>
+  {% endif %}
+</section>
+{% endblock %}
